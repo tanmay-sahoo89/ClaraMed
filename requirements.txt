@@ -1,0 +1,10 @@
+langchain == 0.3.27
+langchain-community == 0.3.31
+langchain_groq == 0.3.8
+huggingface_hub
+flask
+pypdf
+python-dotenv
+chromaDB
+faiss-cpu
+sentence-transformers == 5.1.1
