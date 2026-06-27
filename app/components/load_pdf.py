@@ -18,3 +18,18 @@ def load_pdf_files():
             glob="*.pdf",
             loader_cls=PyPDFLoader
         )
+        
+        documents = loader.load() #pdf stored in this
+        
+        if not documents:
+            logger.warning("No PDF's were found.")
+        else:
+            logger.info(f"Successfully fetched {len(documents)} documents.")
+        return documents
+    except Exception as e:
+        error_message = CustomException("Failed to load PDF", e)
+        logger.error(str(error_message))
+        return []
+    
+def create_text_chunks(documents):
+    
