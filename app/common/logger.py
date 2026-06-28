@@ -11,7 +11,7 @@ LOG_FILES = os.path.join(
 )
 
 logging.basicConfig(
-    filename=LOGS_DIR,
+    filename=LOG_FILES,
     format='%(asctime)s -%(levelname)s -%(message)s',
     level = logging.INFO
 )

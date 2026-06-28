@@ -1,7 +1,7 @@
 langchain == 0.3.27
 langchain-community == 0.3.31
 langchain_groq == 0.3.8
-huggingface_hub
+langchain_huggingface == 0.3.1
 flask
 pypdf
 python-dotenv

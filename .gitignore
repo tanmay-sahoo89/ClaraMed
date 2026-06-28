@@ -3,16 +3,33 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Virtual environments
 venv/
+
+# Environment / config
 .env
+.env.*
+.envvenv/
+.env.local/
 
 # IDE files
 .vscode/
 .idea/
 
-# Environment / config
-.env.*
+# Project generated folders
+logs/
+vectorstore/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
 
 # macOS
 .DS_Store
