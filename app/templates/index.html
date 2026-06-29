@@ -2,81 +2,227 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>🔍 AI Medical Chatbot</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 2rem;
-      }
-      .chat-container {
-        max-width: 700px;
-        margin: 0 auto;
-      }
-      .message {
-        margin-bottom: 1rem;
-        padding: 0.75rem;
-        border-radius: 10px;
-      }
-      .user {
-        background-color: #d1e7ff;
-        text-align: right;
-      }
-      .assistant {
-        background-color: #f1f1f1;
-        text-align: left;
-      }
-      form {
-        margin-top: 2rem;
-      }
-      textarea {
-        width: 100%;
-        height: 3rem;
-        padding: 0.5rem;
-        font-size: 1rem;
-      }
-      button {
-        padding: 0.5rem 1rem;
-        font-size: 1rem;
-        margin-top: 0.5rem;
-      }
-      .error {
-        color: red;
-      }
-      .clear-btn {
-        margin-top: 1rem;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClaraMed — AI Medical Assistant</title>
+    <meta
+      name="description"
+      content="AI-powered medical Q&A grounded in the Gale Encyclopedia of Medicine."
+    />
+
+    <!-- Google Fonts (loaded by CSS @import, but preconnect speeds it up) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Your stylesheet -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
   </head>
   <body>
-    <div class="chat-container">
-      <h1>🔍 AI Medical Chatbot New Change</h1>
+    <!-- ═══ NAVBAR ════════════════════════════════════════════ -->
+    <nav class="navbar" aria-label="ClaraMed navigation">
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <div class="brand-icon" aria-hidden="true">
+          <!-- Stethoscope-style icon -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M19 8c.55 0 1-.45 1-1V4h-3c-.55 0-1 .45-1 1s.45 1 1 1h1.59l-3.3 3.29a1 1 0 1 0 1.41 1.42L19 7.41V8c0 .55.45 1 1 1zm-8 1a5 5 0 0 0-5 5c0 2.76 2.24 5 5 5s5-2.24 5-5a5 5 0 0 0-5-5zm0 8a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM6 3H3v3c0 .55.45 1 1 1s1-.45 1-1V4.41l2.29 2.3a1 1 0 0 0 1.42-1.42L6.41 3H6z"
+            />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">ClaraMed</span>
+          <span class="brand-sub">AI Medical Assistant</span>
+        </div>
+      </a>
 
+      <div class="navbar-status" aria-label="System status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Online</span>
+      </div>
+    </nav>
+
+    <!-- ═══ APP SHELL ═════════════════════════════════════════ -->
+    <div class="app-shell">
+      <!-- Error banner (only shown when Flask passes an error) -->
       {% if error %}
-      <p class="error">{{ error }}</p>
+      <div class="error-banner" role="alert" aria-live="polite">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+          />
+        </svg>
+        <span>{{ error }}</span>
+      </div>
       {% endif %}
 
-      <div id="chat-box">
+      <!-- ─── Chat window ─────────────────────────────────── -->
+      <div
+        class="chat-window"
+        id="chat-window"
+        role="log"
+        aria-live="polite"
+        aria-label="Conversation"
+      >
+        <!-- Hero / empty state -->
+        {% if not messages %}
+        <div class="hero" id="hero-section">
+          <div class="hero-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93-2.67-1.14-5-4.43-5-7.93V7.18L12 5z"
+              />
+            </svg>
+          </div>
+          <h1 class="hero-title">Ask anything <em>medical</em></h1>
+          <p class="hero-desc">
+            Grounded in the Gale Encyclopedia of Medicine. Clear, concise
+            answers — always consult a qualified doctor for personal health
+            decisions.
+          </p>
+          <div class="chips" role="list" aria-label="Suggested questions">
+            <button
+              class="chip"
+              role="listitem"
+              onclick="fillPrompt('What is keratoconus?')"
+            >
+              What is keratoconus?
+            </button>
+            <button
+              class="chip"
+              role="listitem"
+              onclick="fillPrompt('Symptoms of type 2 diabetes')"
+            >
+              Symptoms of type 2 diabetes
+            </button>
+            <button
+              class="chip"
+              role="listitem"
+              onclick="fillPrompt('How does the immune system work?')"
+            >
+              How does the immune system work?
+            </button>
+            <button
+              class="chip"
+              role="listitem"
+              onclick="fillPrompt('What causes hypertension?')"
+            >
+              What causes hypertension?
+            </button>
+            <button
+              class="chip"
+              role="listitem"
+              onclick="fillPrompt('What is a normal heart rate?')"
+            >
+              What is a normal heart rate?
+            </button>
+            <button
+              class="chip"
+              role="listitem"
+              onclick="fillPrompt('Signs of anemia')"
+            >
+              Signs of anemia
+            </button>
+          </div>
+        </div>
+        {% else %}
+        <!-- Session start divider -->
+        <div class="session-divider" aria-hidden="true">
+          <span>Session</span>
+        </div>
+        {% endif %}
+
+        <!-- Render messages from Flask session -->
         {% for msg in messages %}
-        <div class="message {{ msg.role }}">
-          <strong>{{ msg.role|capitalize }}:</strong><br />
-          {{ msg.content | safe | nl2br }}
+        <div class="msg-row {{ msg.role }}">
+          <div class="msg-avatar" aria-hidden="true">
+            {% if msg.role == 'assistant' %}CM{% else %}You{% endif %}
+          </div>
+          <div class="msg-bubble">
+            {% if msg.role == 'assistant' %}
+            <span class="msg-label">ClaraMed</span>
+            {% endif %} {{ msg.content | safe | nl2br }}
+          </div>
         </div>
         {% endfor %}
+
+        <!-- Typing indicator (shown by JS while waiting for response) -->
+        <div
+          class="msg-row assistant typing-indicator"
+          id="typing-row"
+          aria-label="ClaraMed is thinking"
+          aria-live="polite"
+        >
+          <div class="msg-avatar" aria-hidden="true">CM</div>
+          <div class="typing-dots" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
       </div>
+      <!-- /chat-window -->
 
-      <form method="post" action="{{ url_for('index') }}">
-        <textarea
-          name="prompt"
-          placeholder="Ask a medical question..."
-          required
-        ></textarea>
-        <br />
-        <button type="submit">Send</button>
-      </form>
+      <!-- ─── Sticky input area ──────────────────────────── -->
+      <div class="input-area">
+        <form
+          method="post"
+          action="{{ url_for('index') }}"
+          id="chat-form"
+          autocomplete="off"
+        >
+          <div class="input-card">
+            <textarea
+              id="prompt-input"
+              name="prompt"
+              placeholder="Ask a medical question…"
+              rows="1"
+              required
+              spellcheck="true"
+              aria-label="Medical question"
+            ></textarea>
 
-      <form method="get" action="{{ url_for('clear') }}">
-        <button type="submit" class="clear-btn">Clear Chat</button>
-      </form>
+            <div class="input-controls">
+              <a
+                href="{{ url_for('clear') }}"
+                class="btn-clear"
+                title="Clear conversation"
+                aria-label="Clear conversation"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                  />
+                </svg>
+                Clear
+              </a>
+
+              <button
+                type="submit"
+                class="btn-send"
+                id="btn-send"
+                title="Send message"
+                aria-label="Send message"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <p class="disclaimer">
+          ClaraMed can make mistakes. Always verify important medical
+          information with a qualified healthcare provider.
+        </p>
+      </div>
+      <!-- /input-area -->
     </div>
+    <!-- /app-shell -->
+
+    <!-- Your script (loaded at end of body so DOM is ready) -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 </html>

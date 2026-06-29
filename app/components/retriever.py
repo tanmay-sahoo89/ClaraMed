@@ -10,7 +10,7 @@ logger = get_logger(__name__)
 CPT = """
     Answer the following medical Question in 2-3 lines maximum using only the information provided in the context.
     Context:
-    {Context}
+    {context}
     
     Question:
     {question}
