@@ -58,3 +58,5 @@ instance/
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+
+PROJECT_GUIDE.md

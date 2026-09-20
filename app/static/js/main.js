@@ -7,11 +7,11 @@
   "use strict";
 
   /* ── DOM refs ─────────────────────────────────────────── */
-  const form        = document.getElementById("chat-form");
-  const textarea    = document.getElementById("prompt-input");
-  const sendBtn     = document.getElementById("btn-send");
-  const chatWindow  = document.getElementById("chat-window");
-  const typingRow   = document.getElementById("typing-row");
+  const form = document.getElementById("chat-form");
+  const textarea = document.getElementById("prompt-input");
+  const sendBtn = document.getElementById("btn-send");
+  const chatWindow = document.getElementById("chat-window");
+  const typingRow = document.getElementById("typing-row");
   const heroSection = document.getElementById("hero-section");
 
   /* ── Auto-resize textarea ─────────────────────────────── */
@@ -133,37 +133,38 @@
       if (sendBtn) sendBtn.disabled = true;
       showTyping(true);
 
-      /* Send to Flask */
+      /* Send to Flask, tagged as an AJAX request so the server
+         responds with clean JSON instead of a full HTML page. */
       fetch(form.action, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Requested-With": "XMLHttpRequest",
+        },
         body: "prompt=" + encodeURIComponent(query),
       })
         .then(function (res) {
           if (!res.ok) throw new Error("Server returned " + res.status);
-          /* Flask returns a redirect; follow it and parse the refreshed page
-             to extract the last assistant message from the updated session. */
-          return res.text();
+          return res.json();
         })
-        .then(function (html) {
+        .then(function (data) {
           showTyping(false);
           if (sendBtn) sendBtn.disabled = false;
 
-          /* Parse the returned HTML and grab the last assistant bubble */
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, "text/html");
-          const bubbles = doc.querySelectorAll(".msg-row.assistant .msg-bubble");
-
-          if (bubbles.length > 0) {
-            const last = bubbles[bubbles.length - 1];
-            /* Get the text node, skip the .msg-label */
-            const label = last.querySelector(".msg-label");
-            if (label) label.remove();
-            const rawContent = last.innerHTML
-              .replace(/<br\s*\/?>/gi, "\n")
-              .replace(/<[^>]+>/g, "")
-              .trim();
-            appendMessage("assistant", rawContent);
+          if (data.ok) {
+            let content = data.answer;
+            if (data.pages && data.pages.length > 0) {
+              content +=
+                "\n\n— Source: Gale Encyclopedia, page" +
+                (data.pages.length > 1 ? "s " : " ") +
+                data.pages.join(", ");
+            }
+            appendMessage("assistant", content);
+          } else {
+            appendMessage(
+              "assistant",
+              data.error || "Something went wrong. Please try again.",
+            );
           }
         })
         .catch(function (err) {
@@ -171,7 +172,7 @@
           if (sendBtn) sendBtn.disabled = false;
           appendMessage(
             "assistant",
-            "Something went wrong. Please check your connection and try again."
+            "Something went wrong. Please check your connection and try again.",
           );
           console.error("ClaraMed fetch error:", err);
         });

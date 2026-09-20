@@ -1,38 +1,44 @@
 /* ============================================================
    ClaraMed — style.css
-   Place at: app/static/css/style.css
+   Clean scroll / no horizontal seam version
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap");
 
 /* ─── CSS Variables ─────────────────────────────────────── */
+
 :root {
-  --primary-dark:   #051F20;
-  --secondary-dark: #0B2B26;
-  --primary-green:  #163832;
-  --accent-green:   #235347;
-  --soft-green:     #8EB69B;
-  --light-green:    #DAF1DE;
+  --primary-dark: #051f20;
+  --secondary-dark: #0b2b26;
+  --primary-green: #163832;
+  --accent-green: #235347;
+  --soft-green: #8eb69b;
+  --light-green: #daf1de;
 
-  --glow:           rgba(142, 182, 155, 0.18);
-  --border-subtle:  rgba(218, 241, 222, 0.08);
-  --border-mid:     rgba(142, 182, 155, 0.20);
-  --border-bright:  rgba(142, 182, 155, 0.38);
-  --text-muted:     rgba(218, 241, 222, 0.50);
-  --text-dim:       rgba(218, 241, 222, 0.72);
+  --glow: rgba(142, 182, 155, 0.18);
+  --border-subtle: rgba(218, 241, 222, 0.08);
+  --border-mid: rgba(142, 182, 155, 0.2);
+  --border-bright: rgba(142, 182, 155, 0.38);
 
-  --shadow-card:    0 8px 30px rgba(0, 0, 0, 0.35);
-  --shadow-glow:    0 0 25px rgba(142, 182, 155, 0.14);
-  --radius-sm:      10px;
-  --radius-md:      14px;
-  --radius-lg:      18px;
-  --radius-xl:      22px;
+  --text-muted: rgba(218, 241, 222, 0.5);
+  --text-dim: rgba(218, 241, 222, 0.72);
 
-  --transition:     all 0.22s ease;
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 25px rgba(142, 182, 155, 0.14);
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+
+  --transition: all 0.22s ease;
 }
 
 /* ─── Reset ─────────────────────────────────────────────── */
-*, *::before, *::after {
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -42,208 +48,345 @@ html {
   scroll-behavior: smooth;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 15px;
   line-height: 1.6;
+
   background-color: var(--primary-dark);
+
   background-image:
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(35, 83, 71, 0.40) 0%, transparent 65%),
-    radial-gradient(ellipse 45% 45% at 90% 85%,  rgba(22, 56, 50, 0.22) 0%, transparent 60%),
-    radial-gradient(ellipse 35% 35% at 10% 70%,  rgba(11, 43, 38, 0.28) 0%, transparent 60%);
+    radial-gradient(
+      ellipse 90% 55% at 50% -10%,
+      rgba(35, 83, 71, 0.4) 0%,
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 45% 45% at 90% 85%,
+      rgba(22, 56, 50, 0.22) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 35% 35% at 10% 70%,
+      rgba(11, 43, 38, 0.28) 0%,
+      transparent 60%
+    );
+
   color: var(--light-green);
+
   min-height: 100vh;
+
   display: flex;
   flex-direction: column;
+
   -webkit-font-smoothing: antialiased;
+
+  overflow-x: hidden;
 }
 
-/* ─── Scrollbar ──────────────────────────────────────────── */
-::-webkit-scrollbar            { width: 5px; }
-::-webkit-scrollbar-track      { background: transparent; }
-::-webkit-scrollbar-thumb      { background: rgba(142,182,155,0.18); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover{ background: rgba(142,182,155,0.35); }
+/* ─── Scrollbar ─────────────────────────────────────────── */
 
-/* ─── Header / Navbar ────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(142, 182, 155, 0.18);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(142, 182, 155, 0.35);
+}
+
+/* ─── Header / Navbar ───────────────────────────────────── */
+
 .navbar {
   position: sticky;
   top: 0;
+
   z-index: 100;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: 0.9rem 2rem;
-  background: rgba(5, 31, 32, 0.88);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+
+  background: rgba(5, 31, 32, 0.96);
+
   border-bottom: 1px solid var(--border-subtle);
+
+  /*
+     IMPORTANT:
+     No backdrop-filter here.
+     This prevents Chrome compositor seams while scrolling.
+  */
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
+
   gap: 0.7rem;
+
   text-decoration: none;
 }
 
 .brand-icon {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, var(--accent-green) 0%, var(--primary-green) 100%);
+
+  background: linear-gradient(
+    135deg,
+    var(--accent-green) 0%,
+    var(--primary-green) 100%
+  );
+
   border-radius: 10px;
+
   border: 1px solid var(--border-mid);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   flex-shrink: 0;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 .brand-icon svg {
   width: 18px;
   height: 18px;
+
   fill: var(--soft-green);
 }
 
 .brand-text {
   display: flex;
   flex-direction: column;
+
   gap: 1px;
 }
 
 .brand-name {
   font-size: 0.95rem;
+
   font-weight: 600;
+
   color: var(--light-green);
+
   letter-spacing: 0.02em;
+
   line-height: 1;
 }
 
 .brand-sub {
   font-size: 0.65rem;
+
   color: var(--text-muted);
+
   letter-spacing: 0.09em;
+
   text-transform: uppercase;
+
   line-height: 1;
 }
 
 .navbar-status {
   display: flex;
   align-items: center;
+
   gap: 0.45rem;
+
   font-size: 0.72rem;
+
   color: var(--text-muted);
 }
 
 .status-dot {
   width: 7px;
   height: 7px;
+
   background: #4ade80;
+
   border-radius: 50%;
+
   box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
+
   animation: pulse-dot 2.5s ease-in-out infinite;
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.45; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
 }
 
-/* ─── Main layout ────────────────────────────────────────── */
+/* ─── Main Layout ───────────────────────────────────────── */
+
 .app-shell {
   flex: 1;
+
   display: flex;
   flex-direction: column;
+
   max-width: 800px;
+
   width: 100%;
+
   margin: 0 auto;
+
   padding: 0 1.25rem;
+
+  /*
+     Important for flex scrolling:
+     prevents children from forcing the page itself to expand.
+  */
+  min-height: 0;
 }
 
-/* ─── Hero (empty state) ─────────────────────────────────── */
+/* ─── Hero ──────────────────────────────────────────────── */
+
 .hero {
   flex: 1;
+
   display: flex;
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
+
   text-align: center;
+
   padding: 4rem 1rem 2rem;
+
   gap: 0;
 }
 
 .hero-icon {
   width: 62px;
   height: 62px;
-  background: linear-gradient(135deg, var(--accent-green) 0%, var(--primary-green) 100%);
+
+  background: linear-gradient(
+    135deg,
+    var(--accent-green) 0%,
+    var(--primary-green) 100%
+  );
+
   border-radius: 18px;
+
   border: 1px solid var(--border-mid);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   margin-bottom: 1.4rem;
-  box-shadow: var(--shadow-glow), 0 4px 20px rgba(0,0,0,0.3);
+
+  box-shadow:
+    var(--shadow-glow),
+    0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .hero-icon svg {
   width: 28px;
   height: 28px;
+
   fill: var(--light-green);
 }
 
 .hero-title {
-  font-family: 'DM Serif Display', serif;
+  font-family: "DM Serif Display", serif;
+
   font-size: 2.2rem;
+
   font-weight: 400;
+
   color: var(--light-green);
+
   line-height: 1.2;
+
   margin-bottom: 0.75rem;
 }
 
 .hero-title em {
   font-style: italic;
+
   color: var(--soft-green);
 }
 
 .hero-desc {
   font-size: 0.875rem;
+
   color: var(--text-muted);
+
   line-height: 1.75;
+
   max-width: 440px;
+
   margin-bottom: 2rem;
 }
 
-/* ─── Suggestion chips ───────────────────────────────────── */
+/* ─── Suggestion Chips ──────────────────────────────────── */
+
 .chips {
   display: flex;
+
   flex-wrap: wrap;
+
   gap: 0.5rem;
+
   justify-content: center;
 }
 
 .chip {
   background: rgba(11, 43, 38, 0.75);
+
   border: 1px solid var(--border-mid);
+
   border-radius: 50px;
+
   padding: 0.5rem 1.05rem;
+
   font-size: 0.78rem;
-  font-family: 'Inter', sans-serif;
+
+  font-family: "Inter", sans-serif;
+
   color: var(--soft-green);
+
   cursor: pointer;
+
   transition: var(--transition);
+
   outline: none;
 }
 
 .chip:hover,
 .chip:focus-visible {
   background: var(--accent-green);
+
   color: var(--light-green);
+
   border-color: rgba(142, 182, 155, 0.35);
-  box-shadow: 0 0 16px rgba(142,182,155,0.12);
+
+  box-shadow: 0 0 16px rgba(142, 182, 155, 0.12);
+
   transform: translateY(-1px);
 }
 
@@ -251,130 +394,252 @@ body {
   transform: translateY(0);
 }
 
-/* ─── Error banner ───────────────────────────────────────── */
+/* ─── Error Banner ───────────────────────────────────────── */
+
 .error-banner {
   margin: 1rem 0 0;
-  background: rgba(220, 60, 60, 0.10);
+
+  background: rgba(220, 60, 60, 0.1);
+
   border: 1px solid rgba(220, 60, 60, 0.28);
+
   border-radius: var(--radius-md);
+
   padding: 0.75rem 1rem;
+
   display: flex;
+
   align-items: flex-start;
+
   gap: 0.65rem;
+
   font-size: 0.82rem;
+
   color: #f08080;
+
   animation: fadeDown 0.25s ease both;
 }
 
 @keyframes fadeDown {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
 }
 
 .error-banner svg {
   width: 16px;
   height: 16px;
+
   fill: #f08080;
+
   flex-shrink: 0;
+
   margin-top: 1px;
 }
 
-/* ─── Chat window ────────────────────────────────────────── */
+/* ─── CHAT WINDOW ───────────────────────────────────────── */
+
 .chat-window {
   flex: 1;
+
   display: flex;
+
   flex-direction: column;
+
   gap: 1.1rem;
-  padding: 1.75rem 0 0;
+
+  padding: 1.75rem 0 1rem;
+
+  /*
+     This is the actual scrolling area.
+  */
   overflow-y: auto;
+
+  overflow-x: hidden;
+
   min-height: 0;
+
+  /*
+     Prevent scrollbar/compositor artifacts.
+  */
+  isolation: isolate;
+
+  /*
+     Ensures the scrolling area doesn't create a strange
+     visual boundary against the input area.
+  */
+  overscroll-behavior: contain;
 }
 
-/* ─── Message rows ───────────────────────────────────────── */
+/* ─── Message Rows ─────────────────────────────────────── */
+
 .msg-row {
   display: flex;
+
   align-items: flex-end;
+
   gap: 0.65rem;
+
   animation: msgIn 0.28s ease both;
+
+  /*
+     Prevent transformed message rows from creating
+     unnecessary compositor layers.
+  */
+  will-change: auto;
 }
 
 @keyframes msgIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
 }
 
 .msg-row.user {
   flex-direction: row-reverse;
 }
 
-/* Avatar */
+/* ─── Avatar ────────────────────────────────────────────── */
+
 .msg-avatar {
   width: 32px;
   height: 32px;
+
   border-radius: 9px;
+
   display: flex;
+
   align-items: center;
   justify-content: center;
+
   font-size: 0.66rem;
+
   font-weight: 600;
+
   letter-spacing: 0.04em;
+
   flex-shrink: 0;
+
   margin-bottom: 2px;
+
   border: 1px solid var(--border-mid);
 }
 
 .msg-row.user .msg-avatar {
   background: var(--accent-green);
+
   color: var(--light-green);
 }
 
 .msg-row.assistant .msg-avatar {
-  background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+  background: linear-gradient(
+    135deg,
+    var(--primary-green),
+    var(--accent-green)
+  );
+
   color: var(--soft-green);
 }
 
-/* Bubble */
+/* ─── Message Bubble ───────────────────────────────────── */
+
 .msg-bubble {
   max-width: min(72%, 520px);
+
   border-radius: var(--radius-lg);
+
   padding: 0.75rem 1.05rem;
+
   font-size: 0.875rem;
+
   line-height: 1.7;
+
   position: relative;
+
+  /*
+     Prevent text from causing horizontal overflow.
+  */
+  overflow-wrap: anywhere;
+
+  word-break: normal;
 }
 
 .msg-row.user .msg-bubble {
   background: var(--accent-green);
+
   color: var(--light-green);
+
   border: 1px solid rgba(142, 182, 155, 0.22);
+
   border-bottom-right-radius: 4px;
 }
 
 .msg-row.assistant .msg-bubble {
-  background: rgba(11, 43, 38, 0.88);
+  /*
+     IMPORTANT:
+     Fully opaque background.
+     No backdrop-filter.
+     No blur.
+     
+     This prevents Chrome from creating scroll seams
+     between stacked assistant messages.
+  */
+  background: #0b2b26;
+
   color: var(--soft-green);
+
   border: 1px solid var(--border-mid);
+
   border-bottom-left-radius: 4px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+
   box-shadow: var(--shadow-card);
+
+  backdrop-filter: none;
+
+  -webkit-backdrop-filter: none;
 }
 
 .msg-label {
   display: block;
+
   font-size: 0.66rem;
+
   font-weight: 600;
+
   letter-spacing: 0.09em;
+
   text-transform: uppercase;
-  color: rgba(142,182,155,0.55);
+
+  color: rgba(142, 182, 155, 0.55);
+
   margin-bottom: 0.3rem;
 }
 
-/* ─── Typing indicator ───────────────────────────────────── */
+/* ─── Typing Indicator ─────────────────────────────────── */
+
 .typing-indicator {
   display: none;
+
   align-items: flex-end;
+
   gap: 0.65rem;
+
   padding-bottom: 0.25rem;
 }
 
@@ -383,75 +648,193 @@ body {
 }
 
 .typing-dots {
-  background: rgba(11, 43, 38, 0.88);
+  background: #0b2b26;
+
   border: 1px solid var(--border-mid);
+
   border-radius: var(--radius-lg);
+
   border-bottom-left-radius: 4px;
+
   padding: 0.8rem 1.1rem;
+
   display: flex;
+
   gap: 5px;
+
   align-items: center;
 }
 
 .typing-dots span {
   width: 7px;
   height: 7px;
+
   background: var(--soft-green);
+
   border-radius: 50%;
+
   opacity: 0.35;
+
   animation: blink 1.2s ease-in-out infinite;
 }
 
-.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
 
 @keyframes blink {
-  0%, 100% { opacity: 0.35; transform: scale(1); }
-  50%       { opacity: 1;    transform: scale(1.25); }
+  0%,
+  100% {
+    opacity: 0.35;
+
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+
+    transform: scale(1.25);
+  }
 }
 
-/* ─── Input area (sticky footer) ────────────────────────── */
+/* ============================================================
+   INPUT AREA — FIXED SCROLL SEAM VERSION
+   ============================================================ */
+
 .input-area {
   position: sticky;
+
   bottom: 0;
-  padding: 1rem 0 1.4rem;
-  background: linear-gradient(to top, var(--primary-dark) 72%, transparent 100%);
+
+  z-index: 20;
+
+  /*
+     IMPORTANT:
+     Do NOT use a gradient directly as the sticky element's
+     background. That was contributing to the horizontal seam.
+  */
+  background: transparent;
+
   margin-top: auto;
+
+  padding: 1rem 0 1.4rem;
+
+  /*
+     Creates a clean stacking context without the old
+     translateZ(0) compositor hack.
+  */
+  isolation: isolate;
 }
 
+/*
+   The fade is now an independent pseudo-element.
+   It sits BEHIND the input card instead of being the
+   background of the sticky element itself.
+*/
+
+.input-area::before {
+  content: "";
+
+  position: absolute;
+
+  left: -100vw;
+  right: -100vw;
+
+  bottom: 0;
+
+  height: 170px;
+
+  z-index: -1;
+
+  pointer-events: none;
+
+  background: linear-gradient(
+    to top,
+    #051f20 0%,
+    rgba(5, 31, 32, 0.98) 35%,
+    rgba(5, 31, 32, 0.78) 60%,
+    rgba(5, 31, 32, 0.35) 82%,
+    rgba(5, 31, 32, 0) 100%
+  );
+}
+
+/* ─── Input Card ────────────────────────────────────────── */
+
 .input-card {
-  background: rgba(11, 43, 38, 0.92);
+  position: relative;
+
+  z-index: 2;
+
+  background: rgba(11, 43, 38, 0.98);
+
   border: 1px solid var(--border-mid);
+
   border-radius: var(--radius-xl);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+
+  /*
+     Keep blur OFF here as well.
+     It is unnecessary and can cause Chrome scroll seams.
+  */
+  backdrop-filter: none;
+
+  -webkit-backdrop-filter: none;
+
   box-shadow: var(--shadow-card);
+
   padding: 0.7rem 0.7rem 0.7rem 1.1rem;
+
   display: flex;
+
   align-items: flex-end;
+
   gap: 0.6rem;
-  transition: border-color 0.22s, box-shadow 0.22s;
+
+  transition:
+    border-color 0.22s,
+    box-shadow 0.22s;
 }
 
 .input-card:focus-within {
   border-color: var(--border-bright);
-  box-shadow: var(--shadow-card), 0 0 22px rgba(142,182,155,0.10);
+
+  box-shadow:
+    var(--shadow-card),
+    0 0 22px rgba(142, 182, 155, 0.1);
 }
+
+/* ─── Textarea ──────────────────────────────────────────── */
 
 .input-card textarea {
   flex: 1;
+
   background: transparent;
+
   border: none;
+
   outline: none;
+
   color: var(--light-green);
-  font-family: 'Inter', sans-serif;
+
+  font-family: "Inter", sans-serif;
+
   font-size: 0.9rem;
+
   line-height: 1.6;
+
   resize: none;
+
   min-height: 26px;
+
   max-height: 160px;
+
   padding: 3px 0;
+
   caret-color: var(--soft-green);
+
   overflow-y: auto;
 }
 
@@ -459,61 +842,97 @@ body {
   color: var(--text-muted);
 }
 
+/* ─── Input Controls ───────────────────────────────────── */
+
 .input-controls {
   display: flex;
+
   align-items: center;
+
   gap: 0.45rem;
+
   flex-shrink: 0;
 }
 
+/* ─── Clear Button ─────────────────────────────────────── */
+
 .btn-clear {
   background: transparent;
+
   border: 1px solid var(--border-subtle);
+
   border-radius: var(--radius-sm);
+
   color: var(--text-muted);
+
   font-size: 0.73rem;
-  font-family: 'Inter', sans-serif;
+
+  font-family: "Inter", sans-serif;
+
   font-weight: 500;
+
   padding: 0.45rem 0.8rem;
+
   cursor: pointer;
+
   transition: var(--transition);
+
   text-decoration: none;
+
   display: inline-flex;
+
   align-items: center;
+
   gap: 0.35rem;
+
   letter-spacing: 0.02em;
+
   white-space: nowrap;
 }
 
 .btn-clear:hover {
   border-color: var(--border-mid);
+
   color: var(--soft-green);
-  background: rgba(142,182,155,0.06);
+
+  background: rgba(142, 182, 155, 0.06);
 }
 
 .btn-clear svg {
   width: 13px;
   height: 13px;
+
   fill: currentColor;
 }
+
+/* ─── Send Button ───────────────────────────────────────── */
 
 .btn-send {
   width: 38px;
   height: 38px;
+
   background: var(--accent-green);
+
   border: none;
+
   border-radius: 12px;
+
   cursor: pointer;
+
   display: flex;
+
   align-items: center;
   justify-content: center;
+
   flex-shrink: 0;
+
   transition: var(--transition);
 }
 
 .btn-send:hover {
   background: var(--primary-green);
-  box-shadow: 0 0 20px rgba(142,182,155,0.25);
+
+  box-shadow: 0 0 20px rgba(142, 182, 155, 0.25);
 }
 
 .btn-send:active {
@@ -522,61 +941,130 @@ body {
 
 .btn-send:disabled {
   opacity: 0.45;
+
   cursor: not-allowed;
+
   box-shadow: none;
 }
 
 .btn-send svg {
   width: 16px;
   height: 16px;
+
   fill: var(--light-green);
+
   transform: translateX(1px);
 }
 
-/* ─── Disclaimer ─────────────────────────────────────────── */
+/* ─── Disclaimer ───────────────────────────────────────── */
+
 .disclaimer {
   text-align: center;
+
   font-size: 0.67rem;
+
   color: var(--text-muted);
+
   margin-top: 0.5rem;
+
   letter-spacing: 0.01em;
+
   line-height: 1.5;
 }
 
-/* ─── Divider line (date / session start) ────────────────── */
+/* ─── Session Divider ──────────────────────────────────── */
+
 .session-divider {
   display: flex;
+
   align-items: center;
+
   gap: 0.75rem;
+
   padding: 0.25rem 0;
 }
 
 .session-divider::before,
 .session-divider::after {
-  content: '';
+  content: "";
+
   flex: 1;
+
   height: 1px;
+
   background: var(--border-subtle);
 }
 
 .session-divider span {
   font-size: 0.68rem;
+
   color: var(--text-muted);
+
   letter-spacing: 0.06em;
+
   text-transform: uppercase;
+
   white-space: nowrap;
 }
 
-/* ─── Responsive ─────────────────────────────────────────── */
+/* ─── Responsive ───────────────────────────────────────── */
+
 @media (max-width: 600px) {
-  .navbar { padding: 0.8rem 1rem; }
-  .app-shell { padding: 0 0.75rem; }
-  .hero-title { font-size: 1.65rem; }
-  .hero { padding: 3rem 0.5rem 1.5rem; }
-  .msg-bubble { max-width: 85%; }
-  .brand-sub { display: none; }
+  .navbar {
+    padding: 0.8rem 1rem;
+  }
+
+  .app-shell {
+    padding: 0 0.75rem;
+  }
+
+  .hero-title {
+    font-size: 1.65rem;
+  }
+
+  .hero {
+    padding: 3rem 0.5rem 1.5rem;
+  }
+
+  .msg-bubble {
+    max-width: 85%;
+  }
+
+  .brand-sub {
+    display: none;
+  }
+
+  .input-area {
+    padding-bottom: 1rem;
+  }
+
+  .input-area::before {
+    height: 150px;
+  }
 }
 
+/* ─── Reduced Motion ───────────────────────────────────── */
+
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Selection ────────────────────────────────────────── */
+
+::selection {
+  background: rgba(142, 182, 155, 0.25);
+
+  color: var(--light-green);
+}
+
+/* ─── Textarea ─────────────────────────────────────────── */
+
+textarea {
+  resize: vertical;
 }
